@@ -11,6 +11,7 @@ function Home() {
     { id: 2, title: 'Interstellar', image: placeHolder },
     { id: 3, title: 'The Dark Knight', image: placeHolder },
     { id: 4, title: 'The Matrix', image: placeHolder },
+      { id: 5, title: 'The Gabe', image: placeHolder },
   ];
 
   // Search Filter 
