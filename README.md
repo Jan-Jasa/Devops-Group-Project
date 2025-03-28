@@ -1,7 +1,7 @@
 # Movie Explorer App
 
 ## Overview
-A movie favorating application featuring:
+A movie favoriting application featuring:
 - A collection of 2,632 movies spanning multiple years
 - Substring search functionality
 - Movie favoriting system
