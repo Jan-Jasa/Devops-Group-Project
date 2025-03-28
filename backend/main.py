@@ -38,29 +38,23 @@ def get_db():
 
 
 def load_movie_data(filepath, db):
-    # Read the TMDB dataset (Ensure the dataset has 'poster_path' column)
     df = pd.read_csv(filepath,
                      usecols=["id", "title", "release_date", "genres", "vote_average", "poster_path"],
                      dtype=str)
-
-    # Clean and process the data
-    df = df[df["release_date"] != "\\N"]  # Remove missing release dates
-    df = df[df["poster_path"] != "\\N"]  # Remove movies without poster
-    df["year"] = df["release_date"].apply(lambda x: x.split("-")[0])  # Extract the year from release date
+    df = df[df["release_date"] != "\\N"]
+    df = df[df["poster_path"] != "\\N"]
 
     movies = [
         Movie(
             tmdb_id=int(row["id"]),
-            title=row["original_title"],
-            year=int(row["year"]),
+            title=row["title"],
+            date=int(row["release_date"]),
             genre=row["genres"],
             rating=float(row["vote_average"]) if row["vote_average"] != "\\N" else None,
-            poster_url=f"https://image.tmdb.org/t/p/w500{row['poster_path']}"  # Full URL to poster image
+            poster_url=f"https://image.tmdb.org/t/p/w500{row['poster_path']}"
         )
         for _, row in df.iterrows()
     ]
-
-    # Bulk insert the movies into the database
     db.bulk_save_objects(movies)
     db.commit()
 
@@ -69,14 +63,14 @@ def load_movie_data(filepath, db):
 @app.post("/import-tmdb/")
 def import_tmdb(db: Session = Depends(get_db)):
     try:
-        load_tmdb_data("TMDB_movie_dataset_v11.csv", db)  # Make sure the file is in the container
+        load_tmdb_data("TMDB_movie_dataset_v11.csv", db)
         return {"message": "TMDB data imported successfully!"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 
 # API endpoints
-@app.get("/")
+'''@app.get("/")
 def read_root():
     return {"Hello": "World"}
 
@@ -91,4 +85,4 @@ def create_item(name: str, description: str, db: Session = Depends(get_db)):
     db.add(item)
     db.commit()
     db.refresh(item)
-    return item
+    return item'''
